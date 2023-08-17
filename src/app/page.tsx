@@ -1,11 +1,15 @@
 import Link from 'next/link'
-import styles from './page.module.css'
+import dynamic from 'next/dynamic';
+
+const Map = dynamic(() => import('@/components/map'), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <h1>Home page</h1>
-      <Link href="/resources">Additional resources</Link>
+    <main className="container flex-col content-center">
+      <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-center p-12">Global Catastrophic Biohazard Risks Index</h1>
+      <Map/>
     </main>
   )
 }
