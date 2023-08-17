@@ -1,5 +1,6 @@
 'use client'
 
+import * as geojson from 'geojson';
 import * as React from 'react'
 import * as L from 'leaflet'
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
@@ -20,7 +21,7 @@ function style(feature: any) {
     };
 }
 
-function highlightFeature(e: MouseEvent) {
+function highlightFeature(e: L.LeafletMouseEvent) {
     var feature = e.target;
 
     feature.setStyle({
@@ -35,7 +36,7 @@ function highlightFeature(e: MouseEvent) {
     }
 }
 
-function resetHighlight(e: MouseEvent) {
+function resetHighlight(e: L.LeafletMouseEvent) {
     var feature = e.target;
 
     feature.setStyle({
@@ -50,15 +51,10 @@ function resetHighlight(e: MouseEvent) {
     }
 }
 
-function zoomToFeature(e: MouseEvent) {
-    console.log(e.target)
-}
-
-function onEachFeature(feature: any, layer: any) {
+function onEachFeature(feature: geojson.Feature<geojson.Geometry, any>, layer: L.Layer) {
     layer.on({
         mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        click: zoomToFeature
+        mouseout: resetHighlight
     })
 }
 
