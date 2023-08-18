@@ -1,16 +1,15 @@
 'use client'
 
-import * as React from 'react'
+import { createContext, useContext, useState, ReactElement } from 'react'
 import * as L from 'leaflet'
 import { MapContainer, TileLayer, GeoJSON, Rectangle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import { useTheme } from "next-themes"
 import useSWR from 'swr'
 import { featureStyle, onEachFeature } from '@/lib/map-utils';
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { IndicatorSelector } from './indicator-selector';
 
 
 const POSITION_CLASSES: { [position: string]: string } = {
@@ -18,9 +17,25 @@ const POSITION_CLASSES: { [position: string]: string } = {
   bottomright: 'leaflet-bottom leaflet-right',
   topleft: 'leaflet-top leaflet-left',
   topright: 'leaflet-top leaflet-right',
+
+}
+
+interface MapData {
+    dataType: string,
+    setDataType: any,
+    focusedCountry: string | null,
+    setFocusedCountry: any
+}
+
+const defaultMapData: MapData = {
+    dataType: "gcbr-index",
+    setDataType: () => {},
+    focusedCountry: null,
+    setFocusedCountry: () => {}
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const MapContext = createContext(defaultMapData);
 
 function Error() {
   return (
@@ -55,40 +70,27 @@ function LegendControl({ position }: { position: string }) {
 
 function InfoControl({ position }: { position: string }) {
 
+  const { dataType, focusedCountry } = useContext(MapContext)
+
   return (
     <Control position={position}>
-      <h1>info here</h1>
+      <h1>{dataType}</h1>
     </Control>
   )
 }
 
 function DataControl({ position }: { position: string }) {
 
+  const { dataType, setDataType } = useContext(MapContext)
+
   return (
     <Control position={position}>
-      <RadioGroup defaultValue="gcbr-index">
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="gcbr-index" id="gcbr-index" />
-          <Label htmlFor="gcbr-index">GCBR Index</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="lab-leaks" id="lab-leaks" />
-          <Label htmlFor="lab-leaks">Lab leaks</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="zoonotic-disease" id="zoonotic-disease" />
-          <Label htmlFor="zoonotic-disease">Zoonotic disease</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <RadioGroupItem value="bioweapons" id="bioweapons" />
-          <Label htmlFor="bioweapons">Bioweapons</Label>
-        </div>
-      </RadioGroup>
+      <IndicatorSelector/>
     </Control>
   )
 }
 
-function Control({ position, children }: { position: string, children: React.ReactElement }) {
+function Control({ position, children }: { position: string, children: ReactElement }) {
 
   const positionClass =
     (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright
@@ -104,18 +106,25 @@ function Control({ position, children }: { position: string, children: React.Rea
 
 export default function Map() {
 
+  const [dataType, setDataType] = useState('gcbr-index')
+  const [focusedCountry, setFocusedCountry] = useState<string | null>(null)
+  const map_data = { dataType: dataType, setDataType: setDataType, focusedCountry: focusedCountry, setFocusedCountry: setFocusedCountry }
+
   const { resolvedTheme } = useTheme()
   const { data, error, isLoading } = useSWR('/api/data', fetcher)
 
   // Map constants
-  const center: [number, number] = [44, 0]
-  const maxBounds = L.latLngBounds([-180, -180], [180, 180])
+  // const center: [number, number] = [44, 0]
+  // const maxBounds = L.latLngBounds([-180, -180], [180, 180])
+  const center: [number, number] = [44, 30]
+  const maxBounds = L.latLngBounds([-90, -180], [90, 180])
   const minZoom = 2
   const maxZoom = 10
 
   //TODO Fix map height and make it responsive
   return (
-    <div className='w-4/5 m-auto' style={{ height: "600px" }}>
+    <MapContext.Provider value={map_data}>
+    <div className='w-4/5 h-[600px] m-auto'>
       <MapContainer center={center} zoom={minZoom} style={{ height: '100%' }} maxBounds={maxBounds} minZoom={minZoom} maxZoom={maxZoom} zoomControl={false} maxBoundsViscosity={1}>
       <TileLayer
               attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'
@@ -129,8 +138,9 @@ export default function Map() {
 
         <DataControl position='topleft' />
         <InfoControl position='topright' />
-        <LegendControl position='bottomright' />
+        <LegendControl position='bottomleft' />
       </MapContainer>
     </div>
+    </MapContext.Provider>
   )
 }

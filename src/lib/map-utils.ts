@@ -5,10 +5,9 @@ function featureStyle(feature: any) {
     return {
         fillColor: 'slate',
         fillOpacity: 1,
-        weight: 2,
+        weight: 1,
         opacity: 1,
         color: 'white',
-        dashArray: '3'
     };
 }
 
@@ -16,9 +15,8 @@ function highlightFeature(e: L.LeafletMouseEvent) {
     var feature = e.target;
 
     feature.setStyle({
-        weight: 5,
+        weight: 4,
         color: '#666',
-        dashArray: '',
         fillOpacity: 0.1
     });
 
@@ -33,7 +31,6 @@ function resetHighlight(e: L.LeafletMouseEvent) {
     feature.setStyle({
         weight: 1,
         color: 'white',
-        dashArray: '',
         fillOpacity: 1
     });
 

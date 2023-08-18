@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import dynamic from 'next/dynamic';
+import { IndicatorSelector } from '@/components/indicator-selector';
 
 const Map = dynamic(() => import('@/components/map'), {
   ssr: false,
