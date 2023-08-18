@@ -8,7 +8,7 @@ function featureStyle(feature: any) {
         weight: 2,
         opacity: 1,
         color: 'white',
-        dashArray: '3',
+        dashArray: '3'
     };
 }
 
@@ -38,7 +38,7 @@ function resetHighlight(e: L.LeafletMouseEvent) {
     });
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        feature.sendToBack();
+        feature.bringToBack();
     }
 }
 

@@ -34,6 +34,13 @@ export default function HeaderBar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
+              <Link href="/methodology" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Methodology
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <Link href="/resources" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Additional Resources
