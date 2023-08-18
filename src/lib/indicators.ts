@@ -21,11 +21,6 @@ export const indicators: Indicator[] = [
     category: "top"
   },
   {
-    value: "bioweapons",
-    label: "Bioweapons",
-    category: "top"
-  },
-  {
     value: "zoonotic-1.1",
     label: "Global hotspots for zoonotic events",
     category: "zoonotic-risk-burden"

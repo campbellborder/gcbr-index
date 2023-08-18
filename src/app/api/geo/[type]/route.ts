@@ -25,7 +25,7 @@ export async function GET(
         Object.keys(data).forEach((key) => validKeys.includes(key) || delete data[key]);
         var feature = geoJsonData.features.find((feature1: any) => feature1.properties['iso-a3'] == data['iso-a3'])
         if (feature) {
-            Object.keys(data).forEach((key) => feature.properties[key] = data[key])
+            Object.keys(data).forEach((key) => feature.properties.value = data[key])
         }
     })
     

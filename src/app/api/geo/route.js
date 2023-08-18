@@ -8,7 +8,7 @@ export async function GET() {
   const fileContents = await fs.readFile(jsonDirectory + '/countries.geojson', 'utf8');
 
   //Return the content of the data file in json format
-  return NextResponse.json(fileContents);
+  return NextResponse.json(JSON.parse(fileContents));
 }
 
 // DELETE:
