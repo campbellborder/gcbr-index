@@ -85,7 +85,7 @@ function DataControl({ position }: { position: string }) {
 
   return (
     <Control position={position}>
-      <IndicatorSelector/>
+      <IndicatorSelector dataType={dataType} setDataType={setDataType}/>
     </Control>
   )
 }
@@ -111,12 +111,11 @@ export default function Map() {
   const map_data = { dataType: dataType, setDataType: setDataType, focusedCountry: focusedCountry, setFocusedCountry: setFocusedCountry }
 
   const { resolvedTheme } = useTheme()
-  const { data, error, isLoading } = useSWR('/api/data', fetcher)
+  const { data: geoData, error: geoError, isLoading: geoIsLoading } = useSWR('/api/geo', fetcher)
+  const { data: data, error: error, isLoading: isLoading } = useSWR(`/api/${dataType}`, fetcher)
 
   // Map constants
-  // const center: [number, number] = [44, 0]
-  // const maxBounds = L.latLngBounds([-180, -180], [180, 180])
-  const center: [number, number] = [44, 30]
+  const center: [number, number] = [44, 0]
   const maxBounds = L.latLngBounds([-90, -180], [90, 180])
   const minZoom = 2
   const maxZoom = 10
@@ -130,10 +129,10 @@ export default function Map() {
               attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'
               url={`https://api.maptiler.com/maps/dataviz-${resolvedTheme}/{z}/{x}/{y}.png?key=N6PWLkmnRcv3JuZIDvA5`}
             /> 
-        { error &&  <Error />}
-        { isLoading && <Loading/> }
-        { !error && !isLoading &&
-          <GeoJSON data={JSON.parse(data)} style={featureStyle} onEachFeature={onEachFeature} />
+        { geoError && error && <Error />}
+        { geoIsLoading && isLoading && <Loading/> }
+        { !geoError && !geoIsLoading && !error && !isLoading &&
+          <GeoJSON data={JSON.parse(geoData)} style={featureStyle} onEachFeature={onEachFeature} />
         }
 
         <DataControl position='topleft' />

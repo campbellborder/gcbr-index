@@ -1,1 +1,4 @@
 Countries geojson https://datahub.io/core/geo-countries/r/0.html
+
+northern cyrpus is considered Cyprus
+Somaliland is considered Somalia

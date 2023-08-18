@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from "react"
+import { useState, useContext } from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/popover"
 
 import { Indicator, indicators } from "@/lib/indicators"
+import { ScrollArea } from "./ui/scroll-area"
 
 function CommandItems({indicators, category, value, onSelect}: {indicators: Indicator[], category: string, value: string, onSelect: any}) {
     return (
@@ -29,6 +30,7 @@ function CommandItems({indicators, category, value, onSelect}: {indicators: Indi
               key={indicator.value}
               value={indicator.value}
               onSelect={onSelect}
+              className="text-left"
             >
               <Check
                 className={cn(
@@ -43,14 +45,13 @@ function CommandItems({indicators, category, value, onSelect}: {indicators: Indi
     )
 }
 
-export function IndicatorSelector() {
-    const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("gcbr-index")
+export function IndicatorSelector({dataType, setDataType}: {dataType: string, setDataType: any}) {
+    const [open, setOpen] = useState(false)
 
     const onSelect = (currentValue: string) => {
-        setValue(currentValue)
+        setDataType(currentValue)
         setOpen(false)
-      }
+    }
    
     return (
       <Popover open={open} onOpenChange={setOpen}>
@@ -61,43 +62,48 @@ export function IndicatorSelector() {
             aria-expanded={open}
             className="w-[200px] justify-between"
           >
-            {value
-              ? indicators.find((indicator) => indicator.value === value)?.label
+            {dataType
+              ? indicators.find((indicator) => indicator.value === dataType)?.label
               : "Select framework..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0 z-[5000]">
+        <PopoverContent className="w-[200px] h-[500px] p-0 z-[5000]">
           <Command>
-            <CommandInput placeholder="Search indicator..." />
+            <CommandInput placeholder="Search indicators..." />
+            <ScrollArea>
             <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandItems indicators={indicators} category="top" value={value} onSelect={onSelect} />
+            <CommandItems indicators={indicators} category="top" value={dataType} onSelect={onSelect} />
+            <CommandSeparator />
             <CommandGroup heading="Lab leak">
                 <CommandGroup heading="Risk burden">
-                    <CommandItems indicators={indicators} category="lab-leak-risk-burden" value={value} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="lab-leak-risk-burden" value={dataType} onSelect={onSelect} />
                 </CommandGroup>
                 <CommandGroup heading="Risk mitigation efforts">
-                    <CommandItems indicators={indicators} category="lab-leak-risk-mitigation" value={value} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="lab-leak-risk-mitigation" value={dataType} onSelect={onSelect} />
                 </CommandGroup>
             </CommandGroup>
+            <CommandSeparator />
             <CommandGroup heading="Zoonotic">
                 <CommandGroup heading="Risk burden">
-                    <CommandItems indicators={indicators} category="zoonotic-risk-burden" value={value} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="zoonotic-risk-burden" value={dataType} onSelect={onSelect} />
                 </CommandGroup>
                 <CommandGroup heading="Risk mitigation efforts">
-                    <CommandItems indicators={indicators} category="zoonotic-risk-mitigation" value={value} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="zoonotic-risk-mitigation" value={dataType} onSelect={onSelect} />
                 </CommandGroup>
             </CommandGroup>
             <CommandGroup heading="Bioweapons">
                 <CommandGroup heading="Risk burden">
-                    <CommandItems indicators={indicators} category="bioweapons-risk-burden" value={value} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="bioweapons-risk-burden" value={dataType} onSelect={onSelect} />
                 </CommandGroup>
                 <CommandGroup heading="Risk mitigation efforts">
-                    <CommandItems indicators={indicators} category="bioweapons-risk-mitigation" value={value} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="bioweapons-risk-mitigation" value={dataType} onSelect={onSelect} />
                 </CommandGroup>
             </CommandGroup>
+            </ScrollArea>
           </Command>
         </PopoverContent>
+        
       </Popover>
     )
   }
