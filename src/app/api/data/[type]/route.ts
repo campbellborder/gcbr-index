@@ -8,7 +8,19 @@ export async function GET(
 ) {
     const type = params.type
     const jsonDirectory = path.join(process.cwd(), 'data');
-    const json = csvToJson.getJsonFromCsv(jsonDirectory + "/dummy_data.csv")
-    const keys = Object.keys(json[0])
-    return NextResponse.json(type);
+    var jsonData = csvToJson.fieldDelimiter(',').getJsonFromCsv(jsonDirectory + "/dummy_data.csv")
+
+    const keys = Object.keys(jsonData[0])
+    if (type == "all") {
+        var validKeys = keys
+    } else if (type == "scores") {
+        return NextResponse.json(keys.filter((key) => key != "country-code"))
+    } else {
+        var validKeys = ["country-code", type]
+    }
+    jsonData.forEach((data: any) => {
+        Object.keys(data).forEach((key) => validKeys.includes(key) || delete data[key]);
+    })
+    
+    return NextResponse.json(jsonData);
 }
