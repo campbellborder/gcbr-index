@@ -2,14 +2,16 @@
 
 import { createContext, useContext, useState, ReactElement } from 'react'
 import * as L from 'leaflet'
-import { MapContainer, TileLayer, GeoJSON, Rectangle } from 'react-leaflet'
+import * as geojson from 'geojson'
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import { useTheme } from "next-themes"
 import useSWR from 'swr'
-import { featureStyle, onEachFeature } from '@/lib/map-utils';
+import { featureStyle, highlightFeature, resetHighlight, colour_scale } from '@/lib/map-utils';
 import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { IndicatorSelector } from './indicator-selector';
+import { Indicator, indicators } from '@/lib/indicators';
 
 
 const POSITION_CLASSES: { [position: string]: string } = {
@@ -17,21 +19,20 @@ const POSITION_CLASSES: { [position: string]: string } = {
   bottomright: 'leaflet-bottom leaflet-right',
   topleft: 'leaflet-top leaflet-left',
   topright: 'leaflet-top leaflet-right',
-
 }
 
 interface MapData {
-    dataType: string,
-    setDataType: any,
-    focusedCountry: string | null,
-    setFocusedCountry: any
+    indicator: Indicator,
+    setIndicator: any,
+    focusedFeature: any,
+    setFocusedFeature: any
 }
 
 const defaultMapData: MapData = {
-    dataType: "gcbr-index",
-    setDataType: () => {},
-    focusedCountry: null,
-    setFocusedCountry: () => {}
+    indicator: indicators[0],
+    setIndicator: () => {},
+    focusedFeature: null,
+    setFocusedFeature: () => {}
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -63,29 +64,47 @@ function LegendControl({ position }: { position: string }) {
 
   return (
     <Control position={position}>
-      <h1>Legend</h1>
+      <>
+      <div>
+        {[...Array(11).keys()].map((i) => {
+          var number = 100 - i * 10
+          var colour = colour_scale(number).hex()
+          var className = "bg-[" + colour + "] w-4 h-4 float-left mr-3 z-[5000]"
+          return (
+            <div key={i}>
+            <i className={className}></i>
+            {number}
+            <br />
+            </div>)
+        })}
+      </div>
+      </>
     </Control>
   )
 }
 
 function InfoControl({ position }: { position: string }) {
 
-  const { dataType, focusedCountry } = useContext(MapContext)
+  const { indicator, focusedFeature } = useContext(MapContext)
 
   return (
     <Control position={position}>
-      <h1>{dataType}</h1>
+      {focusedFeature &&
+      <div>
+      <h1 className='text-center '>{focusedFeature.properties['name-en']}</h1>
+      <h2>{indicator.label}: {parseFloat(focusedFeature.properties.value).toFixed(2)}</h2>
+      </div>}
     </Control>
   )
 }
 
 function DataControl({ position }: { position: string }) {
 
-  const { dataType, setDataType } = useContext(MapContext)
+  const { indicator, setIndicator } = useContext(MapContext)
 
   return (
     <Control position={position}>
-      <IndicatorSelector dataType={dataType} setDataType={setDataType}/>
+      <IndicatorSelector indicator={indicator} setIndicator={setIndicator}/>
     </Control>
   )
 }
@@ -106,32 +125,46 @@ function Control({ position, children }: { position: string, children: ReactElem
 
 export default function Map() {
 
-  const [dataType, setDataType] = useState('gcbr-index')
-  const [focusedCountry, setFocusedCountry] = useState<string | null>(null)
-  const map_data = { dataType: dataType, setDataType: setDataType, focusedCountry: focusedCountry, setFocusedCountry: setFocusedCountry }
+  const [indicator, setIndicator] = useState(indicators[0])
+  const [focusedFeature, setFocusedFeature] = useState<any>(null)
+  const map_data = { indicator: indicator, setIndicator: setIndicator, focusedFeature: focusedFeature, setFocusedFeature: setFocusedFeature }
 
   const { resolvedTheme } = useTheme()
-  const { data, error, isLoading } = useSWR(`/api/geo/${dataType}`, fetcher)
+  const { data, error, isLoading } = useSWR(`/api/geo/${indicator.value}`, fetcher)
+
+  function onEachFeature(feature: geojson.Feature<geojson.Geometry, any>, layer: L.Layer) {
+    layer.on({
+        mouseover: (e: L.LeafletMouseEvent) => {
+          const feature = highlightFeature(e);
+          setFocusedFeature(feature)
+        },
+        mouseout: (e: L.LeafletMouseEvent) => {
+          resetHighlight(e);
+          setFocusedFeature(null)
+        }
+    })
+}
 
   // Map constants
   const center: [number, number] = [44, 0]
-  const maxBounds = L.latLngBounds([-90, -180], [90, 180])
-  const minZoom = 2
+  const maxBounds = L.latLngBounds([-60, -270], [90, 270])
+  const minZoom = 1.5
   const maxZoom = 10
+  const zoomSnap = 0.5
 
   //TODO Fix map height and make it responsive
   return (
     <MapContext.Provider value={map_data}>
-    <div className='w-4/5 h-[600px] m-auto'>
-      <MapContainer center={center} zoom={minZoom} style={{ height: '100%' }} maxBounds={maxBounds} minZoom={minZoom} maxZoom={maxZoom} zoomControl={false} maxBoundsViscosity={1}>
-      <TileLayer
+    <div className='w-full md:w-4/5 h-[600px] m-auto'>
+      <MapContainer center={center} zoom={minZoom} style={{ height: '100%', background: 'transparent' }} maxBounds={maxBounds} minZoom={minZoom} maxZoom={maxZoom} zoomSnap={zoomSnap} zoomControl={false} maxBoundsViscosity={1}>
+      {/* <TileLayer
               attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'
               url={`https://api.maptiler.com/maps/dataviz-${resolvedTheme}/{z}/{x}/{y}.png?key=N6PWLkmnRcv3JuZIDvA5`}
-            /> 
+            />  */}
         { error && <Error />}
         { isLoading && <Loading/> }
         { !error && !isLoading &&
-          <GeoJSON data={data} style={featureStyle} onEachFeature={onEachFeature} />
+          <GeoJSON data={data} style={featureStyle} onEachFeature={onEachFeature} attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'/>
         }
 
         <DataControl position='topleft' />

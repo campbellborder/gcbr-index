@@ -45,11 +45,11 @@ function CommandItems({indicators, category, value, onSelect}: {indicators: Indi
     )
 }
 
-export function IndicatorSelector({dataType, setDataType}: {dataType: string, setDataType: any}) {
+export function IndicatorSelector({indicator, setIndicator}: {indicator: Indicator, setIndicator: any}) {
     const [open, setOpen] = useState(false)
 
     const onSelect = (currentValue: string) => {
-        setDataType(currentValue)
+      setIndicator(indicators.find((indicator) => indicator.value == currentValue))
         setOpen(false)
     }
    
@@ -62,9 +62,7 @@ export function IndicatorSelector({dataType, setDataType}: {dataType: string, se
             aria-expanded={open}
             className="w-[200px] justify-between"
           >
-            {dataType
-              ? indicators.find((indicator) => indicator.value === dataType)?.label
-              : "Select framework..."}
+            {indicator.label}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -73,31 +71,31 @@ export function IndicatorSelector({dataType, setDataType}: {dataType: string, se
             <CommandInput placeholder="Search indicators..." />
             <ScrollArea>
             <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandItems indicators={indicators} category="top" value={dataType} onSelect={onSelect} />
+            <CommandItems indicators={indicators} category="top" value={indicator.value} onSelect={onSelect} />
             <CommandSeparator />
             <CommandGroup heading="Lab leak">
                 <CommandGroup heading="Risk burden">
-                    <CommandItems indicators={indicators} category="lab-leak-risk-burden" value={dataType} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="lab-leak-risk-burden" value={indicator.value} onSelect={onSelect} />
                 </CommandGroup>
                 <CommandGroup heading="Risk mitigation efforts">
-                    <CommandItems indicators={indicators} category="lab-leak-risk-mitigation" value={dataType} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="lab-leak-risk-mitigation" value={indicator.value} onSelect={onSelect} />
                 </CommandGroup>
             </CommandGroup>
             <CommandSeparator />
             <CommandGroup heading="Zoonotic">
                 <CommandGroup heading="Risk burden">
-                    <CommandItems indicators={indicators} category="zoonotic-risk-burden" value={dataType} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="zoonotic-risk-burden" value={indicator.value} onSelect={onSelect} />
                 </CommandGroup>
                 <CommandGroup heading="Risk mitigation efforts">
-                    <CommandItems indicators={indicators} category="zoonotic-risk-mitigation" value={dataType} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="zoonotic-risk-mitigation" value={indicator.value} onSelect={onSelect} />
                 </CommandGroup>
             </CommandGroup>
             <CommandGroup heading="Bioweapons">
                 <CommandGroup heading="Risk burden">
-                    <CommandItems indicators={indicators} category="bioweapons-risk-burden" value={dataType} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="bioweapons-risk-burden" value={indicator.value} onSelect={onSelect} />
                 </CommandGroup>
                 <CommandGroup heading="Risk mitigation efforts">
-                    <CommandItems indicators={indicators} category="bioweapons-risk-mitigation" value={dataType} onSelect={onSelect} />
+                    <CommandItems indicators={indicators} category="bioweapons-risk-mitigation" value={indicator.value} onSelect={onSelect} />
                 </CommandGroup>
             </CommandGroup>
             </ScrollArea>

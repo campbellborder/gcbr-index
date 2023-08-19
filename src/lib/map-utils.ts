@@ -1,26 +1,20 @@
-import * as geojson from 'geojson'
 import * as L from 'leaflet'
+import * as chroma from 'chroma-js'
 
-function getColor(d: any) {
-    return d > 90  ? '#b10026' :
-           d > 75  ? '#e31a1c' :
-           d > 70  ? '#fc4e2a' :
-           d > 30  ? '#fd8d3c' :
-           d > 20  ? '#feb24c' :
-           d > 10  ? '#fed976' :
-           d > 5   ? '#ffeda0' :
-                     '#ffffcc';
+const colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'red']).domain([0,100])
+
+function get_colour(d: any) {
+    const colour: chroma.Color = colour_scale(d)
+    return colour.hex()
 }
-
-
 
 function featureStyle(feature: any) {
     return {
-        fillColor: getColor(feature.properties.value),
+        fillColor: (colour_scale(feature.properties.value)).hex(),
         fillOpacity: 0.7,
         weight: 1,
-        opacity: 1,
         color: 'white',
+        opacity: 1
     };
 }
 
@@ -28,14 +22,15 @@ function highlightFeature(e: L.LeafletMouseEvent) {
     var feature = e.target;
 
     feature.setStyle({
-        weight: 4,
-        color: '#666',
-        fillOpacity: 0.
+        weight: 2,
+        fillOpacity: 1
     });
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         feature.bringToFront();
     }
+
+    return feature.feature;
 }
 
 function resetHighlight(e: L.LeafletMouseEvent) {
@@ -43,8 +38,7 @@ function resetHighlight(e: L.LeafletMouseEvent) {
 
     feature.setStyle({
         weight: 1,
-        color: 'white',
-        fillOpacity: 1
+        fillOpacity: 0.7
     });
 
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -52,11 +46,5 @@ function resetHighlight(e: L.LeafletMouseEvent) {
     }
 }
 
-function onEachFeature(feature: geojson.Feature<geojson.Geometry, any>, layer: L.Layer) {
-    layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight
-    })
-}
 
-export { featureStyle, onEachFeature }
+export { featureStyle, highlightFeature, resetHighlight, colour_scale }
