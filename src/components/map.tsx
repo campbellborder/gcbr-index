@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, ReactElement } from 'react'
+import { createContext, useContext, useState, ReactElement, useEffect } from 'react'
 import * as L from 'leaflet'
 import * as geojson from 'geojson'
 import { MapContainer, TileLayer, GeoJSON, Rectangle, useMap } from 'react-leaflet'
@@ -126,12 +126,19 @@ function Control({ position, children }: { position: string, children: ReactElem
   )
 }
 
-function Bounds() {
+function Bounds({bounds}: {bounds: L.LatLngBounds}) {
 
   var map = useMap()
-  map.setMaxBounds(map.getBounds())
+  useEffect(() => {
+    
+    map.fitBounds(bounds)
+    map.setMaxBounds(map.getBounds())
+    map.setMinZoom(map.getZoom())
+    // map.setMaxBounds()
+    console.log("set bounds")
+  }, [])
 
-  return <></>
+  return  <></> //<Rectangle bounds={bounds}/></>
 }
 
 export default function Map() {
@@ -158,31 +165,45 @@ export default function Map() {
 
   // Map constants
   const center: [number, number] = [30, 0]
-  const minZoom = 1.5
+  const bounds = L.latLngBounds([[-60, -175], [84.5, 195]])
   const maxZoom = 10
-  const zoomSnap = 0.5
+  const zoomSnap = 0.1
+  const zoomDelta = 1
 
   //TODO Fix map height and make it responsive
   return (
     <MapContext.Provider value={map_data}>
-    <div className='w-full md:w-4/5 h-[600px] m-auto'>
-    <MapContainer center={center} zoom={minZoom} style={{ height: '100%', background: 'transparent' }} minZoom={minZoom} maxZoom={maxZoom} zoomSnap={zoomSnap} zoomControl={false} maxBoundsViscosity={1}>
-      {/* <TileLayer
-              attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'
-              url={`https://api.maptiler.com/maps/dataviz-${resolvedTheme}/{z}/{x}/{y}.png?key=N6PWLkmnRcv3JuZIDvA5`}
-            />  */}
-        <Bounds/>
-        { error && <Error />}
-        { isLoading && <Loading/> }
-        { !error && !isLoading &&
-          <GeoJSON data={data} style={resolvedTheme == "light" ? featureStyle : featureStyleDark} onEachFeature={onEachFeature} attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'/>
-        }
-        <DataControl position='topleft' />
-        <InfoControl position='topright' />
-        <LegendControl position='bottomleft' />
-        
+    <div className='w-full md:w-4/5 h-[600px] md:m-auto'>
+    <MapContainer
+      center={center}
+      style={{ height: '100%', background: 'transparent' }}
+      maxZoom={maxZoom}
+      zoomSnap={zoomSnap}
+      zoomControl={false}
+      zoomDelta={zoomDelta}
+      maxBoundsViscosity={1}
+      wheelPxPerZoomLevel={10}>
+
+      <Bounds bounds={bounds}/>
+      <DataControl position='topleft' />
+      <InfoControl position='topright' />
+      <LegendControl position='bottomleft' />
+
+      { error && <Error />}
+      { isLoading && <Loading/> }
+      { !error && !isLoading &&
+        <GeoJSON data={data} style={resolvedTheme == "light" ? featureStyle : featureStyleDark} onEachFeature={onEachFeature} attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'/>
+      }
+      
       </MapContainer>
     </div>
     </MapContext.Provider>
   )
 }
+
+//minZoom={minZoom}
+
+//      <TileLayer
+// attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'
+// url={`https://api.maptiler.com/maps/dataviz-${resolvedTheme}/{z}/{x}/{y}.png?key=N6PWLkmnRcv3JuZIDvA5`}
+// /> 

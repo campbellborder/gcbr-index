@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'GCBR Index',
-  description: 'Global catastropic biological risks index - an ERA funded project',
+  description: 'Global catastropic biological risks index',
 }
 
 export default function RootLayout({
