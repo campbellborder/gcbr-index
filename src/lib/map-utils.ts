@@ -18,6 +18,16 @@ function featureStyle(feature: any) {
     };
 }
 
+function featureStyleDark(feature: any) {
+    return {
+        fillColor: (colour_scale(feature.properties.value)).hex(),
+        fillOpacity: 0.7,
+        weight: 1,
+        color: '#020817',
+        opacity: 1
+    };
+}
+
 function highlightFeature(e: L.LeafletMouseEvent) {
     var feature = e.target;
 
@@ -47,4 +57,4 @@ function resetHighlight(e: L.LeafletMouseEvent) {
 }
 
 
-export { featureStyle, highlightFeature, resetHighlight, colour_scale }
+export { featureStyle, featureStyleDark, highlightFeature, resetHighlight, colour_scale }

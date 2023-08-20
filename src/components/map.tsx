@@ -3,11 +3,11 @@
 import { createContext, useContext, useState, ReactElement } from 'react'
 import * as L from 'leaflet'
 import * as geojson from 'geojson'
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
+import { MapContainer, TileLayer, GeoJSON, Rectangle, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import { useTheme } from "next-themes"
 import useSWR from 'swr'
-import { featureStyle, highlightFeature, resetHighlight, colour_scale } from '@/lib/map-utils';
+import { featureStyle, featureStyleDark, highlightFeature, resetHighlight, colour_scale } from '@/lib/map-utils';
 import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { IndicatorSelector } from './indicator-selector';
@@ -62,6 +62,10 @@ function Loading() {
 
 function LegendControl({ position }: { position: string }) {
 
+  const colourClasses = [
+    
+  ]
+
   return (
     <Control position={position}>
       <>
@@ -69,12 +73,11 @@ function LegendControl({ position }: { position: string }) {
         {[...Array(11).keys()].map((i) => {
           var number = 100 - i * 10
           var colour = colour_scale(number).hex()
-          var className = "bg-[" + colour + "] w-4 h-4 float-left mr-3 z-[5000]"
           return (
             <div key={i}>
-            <i className={className}></i>
+            <i className={"w-4 h-4 float-left mr-3 z-[5000]"} style={{background: colour}}></i>
             {number}
-            <br />
+            <br/>
             </div>)
         })}
       </div>
@@ -116,11 +119,19 @@ function Control({ position, children }: { position: string, children: ReactElem
 
   return (
     <div className={positionClass}>
-      <div className="leaflet-control leaflet-bar bg-white dark:bg-slate-950 p-2">
+      <div className="leaflet-control leaflet-bar bg-white dark:bg-[#020817] p-2 border-none">
         {children}
       </div>
     </div>
   )
+}
+
+function Bounds() {
+
+  var map = useMap()
+  map.setMaxBounds(map.getBounds())
+
+  return <></>
 }
 
 export default function Map() {
@@ -146,8 +157,7 @@ export default function Map() {
 }
 
   // Map constants
-  const center: [number, number] = [44, 0]
-  const maxBounds = L.latLngBounds([-60, -270], [90, 270])
+  const center: [number, number] = [30, 0]
   const minZoom = 1.5
   const maxZoom = 10
   const zoomSnap = 0.5
@@ -156,20 +166,21 @@ export default function Map() {
   return (
     <MapContext.Provider value={map_data}>
     <div className='w-full md:w-4/5 h-[600px] m-auto'>
-      <MapContainer center={center} zoom={minZoom} style={{ height: '100%', background: 'transparent' }} maxBounds={maxBounds} minZoom={minZoom} maxZoom={maxZoom} zoomSnap={zoomSnap} zoomControl={false} maxBoundsViscosity={1}>
+    <MapContainer center={center} zoom={minZoom} style={{ height: '100%', background: 'transparent' }} minZoom={minZoom} maxZoom={maxZoom} zoomSnap={zoomSnap} zoomControl={false} maxBoundsViscosity={1}>
       {/* <TileLayer
               attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'
               url={`https://api.maptiler.com/maps/dataviz-${resolvedTheme}/{z}/{x}/{y}.png?key=N6PWLkmnRcv3JuZIDvA5`}
             />  */}
+        <Bounds/>
         { error && <Error />}
         { isLoading && <Loading/> }
         { !error && !isLoading &&
-          <GeoJSON data={data} style={featureStyle} onEachFeature={onEachFeature} attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'/>
+          <GeoJSON data={data} style={resolvedTheme == "light" ? featureStyle : featureStyleDark} onEachFeature={onEachFeature} attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'/>
         }
-
         <DataControl position='topleft' />
         <InfoControl position='topright' />
         <LegendControl position='bottomleft' />
+        
       </MapContainer>
     </div>
     </MapContext.Provider>
