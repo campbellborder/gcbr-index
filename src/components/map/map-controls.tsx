@@ -10,7 +10,6 @@ const POSITION_CLASSES: { [position: string]: string } = {
   topright: 'leaflet-top leaflet-right',
 }
 
-// Control displaying the legend
 function LegendControl({ position }: { position: string }) {
 
   return (
@@ -35,15 +34,24 @@ function LegendControl({ position }: { position: string }) {
 
 function InfoControl({ position }: { position: string }) {
 
-  const { indicator, focusedFeature } = useContext(MapContext)
+  const { focusedFeature } = useContext(MapContext)
+
+  function displayValue(s: string) {
+    var num = Number(s)
+    if (Number.isInteger(num)) {
+      return num.toFixed(0)
+    }
+    return num.toFixed(2)
+  }
 
   return (
     <Control position={position}>
+      <div className='p-2 w-[200px]'>
+      <h1 className='text-center font-bold'>{focusedFeature ? focusedFeature.properties['name-en'] : "Hover over a country"}</h1>
       {focusedFeature &&
-      <div className='p-2'>
-      <h1 className='text-center'>{focusedFeature.properties['name-en']}</h1>
-      <h2>{indicator.label}: {parseFloat(focusedFeature.properties.value).toFixed(2)}</h2>
-      </div>}
+      <h2 className='text-center'>{displayValue(focusedFeature.properties.value)}</h2>
+      }
+      </div>
     </Control>
   )
 }

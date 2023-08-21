@@ -53,6 +53,7 @@ export default function Map() {
       maxBoundsViscosity={1}
       wheelPxPerZoomLevel={10}
       renderer={renderer}
+      attributionControl={false}
       >
 
       <MapBounds bounds={bounds}/>
