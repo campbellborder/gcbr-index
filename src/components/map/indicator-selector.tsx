@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/popover"
 
 import { Indicator, indicators } from "@/lib/indicators"
-import { ScrollArea } from "./ui/scroll-area"
+import { ScrollArea } from "../ui/scroll-area"
 
 function CommandItems({indicators, category, value, onSelect}: {indicators: Indicator[], category: string, value: string, onSelect: any}) {
     return (

@@ -51,10 +51,10 @@ export default function MapData({ indicator, setFocusedFeature }: { indicator: I
       mouseout: (e: L.LeafletMouseEvent) => {
         resetHighlight(e);
         setFocusedFeature(null)
-      },
-      click: (e: L.LeafletMouseEvent) => {
-        map.fitBounds(e.target.getBounds())
-      }
+      } //,
+      // click: (e: L.LeafletMouseEvent) => {
+      //   map.fitBounds(e.target.getBounds())
+      // }
     })
   }
 
@@ -66,7 +66,6 @@ export default function MapData({ indicator, setFocusedFeature }: { indicator: I
       data={data}
       style={resolvedTheme == "light" ? featureStyle : featureStyleDark}
       onEachFeature={onEachFeature}
-      attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap</a> contributors'
     />
   )
 }

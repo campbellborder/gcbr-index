@@ -1,12 +1,7 @@
 import * as L from 'leaflet'
-import * as chroma from 'chroma-js'
+import chroma from 'chroma-js'
 
-const colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'red']).domain([0,100])
-
-function get_colour(d: any) {
-    const colour: chroma.Color = colour_scale(d)
-    return colour.hex()
-}
+const colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'red']).domain([0,100]).padding([0.1, 0])
 
 function featureStyle(feature: any) {
     return {

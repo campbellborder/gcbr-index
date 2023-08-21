@@ -7,7 +7,7 @@ import { MapContainer, useMap } from 'react-leaflet'
 import { indicators } from '@/lib/indicators';
 import MapData from './map-data';
 import MapControls from './map-controls';
-import { MapContext } from '@/contexts/map-context';
+import { MapContext } from '@/components/map/map-context';
 
 // Handle automatic setting of bounds and minimum zoom
 function MapBounds({bounds}: {bounds: L.LatLngBounds}) {
@@ -52,7 +52,8 @@ export default function Map() {
       zoomDelta={zoomDelta}
       maxBoundsViscosity={1}
       wheelPxPerZoomLevel={10}
-      renderer={renderer}>
+      renderer={renderer}
+      >
 
       <MapBounds bounds={bounds}/>
       <MapControls />

@@ -1,7 +1,7 @@
 import { colour_scale } from '@/lib/map-utils';
 import { useContext, ReactElement } from 'react'
-import { MapContext } from '@/contexts/map-context';
-import { IndicatorSelector } from '@/components/indicator-selector';
+import { MapContext } from '@/components/map/map-context';
+import { IndicatorSelector } from '@/components/map/indicator-selector';
 
 const POSITION_CLASSES: { [position: string]: string } = {
   bottomleft: 'leaflet-bottom leaflet-left',
@@ -10,18 +10,19 @@ const POSITION_CLASSES: { [position: string]: string } = {
   topright: 'leaflet-top leaflet-right',
 }
 
+// Control displaying the legend
 function LegendControl({ position }: { position: string }) {
 
   return (
     <Control position={position}>
       <>
-      <div>
+      <div className="p-2">
         {[...Array(6).keys()].map((i) => {
           var number = 100 - i * 20
           var colour = colour_scale(number).hex()
           return (
-            <div key={i}>
-            <i className={"w-4 h-4 float-left mr-3 z-[5000]"} style={{background: colour}}></i>
+            <div key={i} className='h-4'>
+            <i className={"w-4 h-full float-left mr-2 z-[5000]"} style={{background: colour}}></i>
             {number}
             <br/>
             </div>)
