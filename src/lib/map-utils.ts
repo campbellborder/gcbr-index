@@ -23,32 +23,18 @@ function featureStyleDark(feature: any) {
     };
 }
 
-function highlightFeature(e: L.LeafletMouseEvent) {
-    var feature = e.target;
+function highlightFeature(layer: any) {
 
-    feature.setStyle({
-        weight: 3,
+    layer.setStyle({
+        weight: 2,
         fillOpacity: 0.7
     });
 
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        feature.bringToFront();
-    }
-
-    return feature.feature;
+    return layer.feature;
 }
 
-function resetHighlight(e: L.LeafletMouseEvent) {
-    var feature = e.target;
-
-    feature.setStyle({
-        weight: 1,
-        fillOpacity: 1
-    });
-
-    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-        feature.bringToBack();
-    }
+function resetHighlight(layer: L.Layer, geojson: L.GeoJSON) {
+    geojson.resetStyle(layer)
 }
 
 

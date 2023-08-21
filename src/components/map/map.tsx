@@ -18,7 +18,6 @@ function MapBounds({bounds}: {bounds: L.LatLngBounds}) {
     map.setMaxBounds(map.getBounds())
     map.setMinZoom(map.getZoom())
   }, [])
-
   return null
 }
 
@@ -58,7 +57,7 @@ export default function Map() {
 
       <MapBounds bounds={bounds}/>
       <MapControls />
-      <MapData indicator={indicator} setFocusedFeature={setFocusedFeature}/>
+      <MapData/>
     
     </MapContainer>
     </MapContext.Provider>
