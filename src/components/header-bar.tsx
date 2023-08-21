@@ -14,7 +14,7 @@ import { DarkModeToggle } from './dm-toggle'
 export default function HeaderBar() {
 
   return (
-    <header className="border-b">
+    <header className="fixed border-b bg-inherit w-full top-0">
       <div className="container flex h-14">
 
         <NavigationMenu>
