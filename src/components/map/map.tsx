@@ -44,7 +44,7 @@ export default function Map() {
     <MapContext.Provider value={map_data}>
     <MapContainer
       center={center}
-      style={{ height: '100%', background: 'transparent' }}
+      className='!h-full !bg-transparent'
       maxZoom={maxZoom}
       zoomSnap={zoomSnap}
       zoomControl={false}

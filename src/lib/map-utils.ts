@@ -3,28 +3,28 @@ import chroma from 'chroma-js'
 
 const colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'red']).domain([0,100]).padding([0.1, 0])
 
-function featureStyle(feature: any) {
+function featureStyle(feature: any, colourKey: string, theme: string) {
     return {
-        fillColor: (colour_scale(feature.properties.value)).hex(),
+        fillColor: (colour_scale(feature.properties[colourKey])).hex(),
         fillOpacity: 1,
         weight: 1,
-        color: 'white',
+        color: theme == "light" ? 'white' : '#020817',
         opacity: 1
     };
 }
 
-function featureStyleDark(feature: any) {
+function featureStyleOG(feature: any) {
     return {
-        fillColor: (colour_scale(feature.properties.value)).hex(),
+        fillColor: (colour_scale(feature.properties['gcbr-index'])).hex(),
         fillOpacity: 1,
         weight: 1,
-        color: '#020817',
+        color: "light" == "light" ? 'white' : '#020817',
         opacity: 1
     };
 }
 
 function highlightFeature(layer: any) {
-
+    console.log("highlight feature")
     layer.setStyle({
         weight: 2,
         fillOpacity: 0.7
@@ -34,8 +34,9 @@ function highlightFeature(layer: any) {
 }
 
 function resetHighlight(layer: L.Layer, geojson: L.GeoJSON) {
+    console.log("reset highlight")
     geojson.resetStyle(layer)
 }
 
 
-export { featureStyle, featureStyleDark, highlightFeature, resetHighlight, colour_scale }
+export { featureStyleOG, highlightFeature, resetHighlight, colour_scale }

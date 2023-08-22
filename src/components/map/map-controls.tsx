@@ -34,7 +34,7 @@ function LegendControl({ position }: { position: string }) {
 
 function InfoControl({ position }: { position: string }) {
 
-  const { focusedFeature } = useContext(MapContext)
+  const { indicator, focusedFeature } = useContext(MapContext)
 
   function displayValue(s: string) {
     var num = Number(s)
@@ -49,7 +49,7 @@ function InfoControl({ position }: { position: string }) {
       <div className='p-2 w-[200px]'>
       <h1 className='text-center font-bold'>{focusedFeature ? focusedFeature.properties['name-en'] : "Hover over a country"}</h1>
       {focusedFeature &&
-      <h2 className='text-center'>{displayValue(focusedFeature.properties.value)}</h2>
+      <h2 className='text-center'>{displayValue(focusedFeature.properties[indicator.value])}</h2>
       }
       </div>
     </Control>

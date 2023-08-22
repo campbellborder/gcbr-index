@@ -1,12 +1,12 @@
 import { Indicator } from '@/lib/indicators';
-import { GeoJSON, useMap } from 'react-leaflet'
+import { GeoJSON, useMap, Tooltip } from 'react-leaflet'
 import { useTheme } from "next-themes"
 import useSWR from 'swr'
 import * as geojson from 'geojson'
-import { featureStyle, featureStyleDark, highlightFeature, resetHighlight } from '@/lib/map-utils';
+import { featureStyleOG, highlightFeature, resetHighlight } from '@/lib/map-utils';
 import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useEffect } from 'react';
 import { MapContext } from './map-context';
 
 // Fetch function for SWR
@@ -39,16 +39,16 @@ function Loading() {
 export default function MapData() {
 
   // Hooks
-  const { indicator, setFocusedFeature } = useContext(MapContext)
+  const { indicator, focusedFeature, setFocusedFeature } = useContext(MapContext)
   const geojson = useRef<L.GeoJSON>(null)
   const { resolvedTheme } = useTheme()
   const { data, error, isLoading } = useSWR(() => `/api/geo/${indicator.value}`, fetcher)
 
   // Feature event callbacks
   function onEachFeature(_: geojson.Feature<geojson.Geometry, any>, layer: L.Layer) {
+    console.log("on each feature")
     layer.on({
       mouseover: (e: L.LeafletMouseEvent) => {
-        console.log(e)
         const feature = highlightFeature(e.target);
         setFocusedFeature(feature)
       },
@@ -66,10 +66,17 @@ export default function MapData() {
   return (
     <GeoJSON
       ref={geojson}
-      key={indicator.value}
+      key={indicator.value + resolvedTheme}
       data={data}
-      style={resolvedTheme == "light" ? featureStyle : featureStyleDark}
+      // style={(feature) => featureStyle(feature, indicator.value, resolvedTheme!)}
+      style={featureStyleOG}
       onEachFeature={onEachFeature}
-    />
+    >
+      <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground'>
+        <div>
+          {focusedFeature && focusedFeature.properties['name-en']}
+        </div>
+      </Tooltip>
+    </GeoJSON>
   )
 }
