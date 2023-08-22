@@ -9,7 +9,7 @@ export async function GET(
 ) {
     const type = params.type
     const jsonDirectory = path.join(process.cwd(), 'data');
-    var jsonData = csvToJson.fieldDelimiter(',').getJsonFromCsv(jsonDirectory + "/dummy_data.csv")
+    var jsonData = csvToJson.fieldDelimiter(',').getJsonFromCsv(jsonDirectory + "/gcbr_data.csv")
     const geoJsonString = await fs.readFile(jsonDirectory + '/countries.geojson', 'utf8');
     var geoJsonData = JSON.parse(geoJsonString)
 

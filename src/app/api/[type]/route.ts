@@ -8,7 +8,7 @@ export async function GET(
 ) {
     const type = params.type
     const jsonDirectory = path.join(process.cwd(), 'data');
-    var jsonData = csvToJson.fieldDelimiter(',').getJsonFromCsv(jsonDirectory + "/dummy_data.csv")
+    var jsonData = csvToJson.fieldDelimiter(',').getJsonFromCsv(jsonDirectory + "/gcbr_data.csv")
 
     const keys = Object.keys(jsonData[0])
     if (type == "all") {

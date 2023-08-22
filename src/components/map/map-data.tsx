@@ -3,7 +3,7 @@ import { GeoJSON, useMap, Tooltip } from 'react-leaflet'
 import { useTheme } from "next-themes"
 import useSWR from 'swr'
 import * as geojson from 'geojson'
-import { featureStyleOG, highlightFeature, resetHighlight } from '@/lib/map-utils';
+import { featureStyle, featureStyleOG, highlightFeature, resetHighlight } from '@/lib/map-utils';
 import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useContext, useRef, useEffect } from 'react';
@@ -68,8 +68,8 @@ export default function MapData() {
       ref={geojson}
       key={indicator.value + resolvedTheme}
       data={data}
-      // style={(feature) => featureStyle(feature, indicator.value, resolvedTheme!)}
-      style={featureStyleOG}
+      style={(feature) => featureStyle(feature, indicator.value, resolvedTheme!)}
+      // style={featureStyleOG}
       onEachFeature={onEachFeature}
     >
       <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground'>

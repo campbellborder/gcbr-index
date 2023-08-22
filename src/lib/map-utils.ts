@@ -4,6 +4,7 @@ import chroma from 'chroma-js'
 const colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'red']).domain([0,100]).padding([0.1, 0])
 
 function featureStyle(feature: any, colourKey: string, theme: string) {
+    console.log("instyle")
     return {
         fillColor: (colour_scale(feature.properties[colourKey])).hex(),
         fillOpacity: 1,
@@ -14,6 +15,7 @@ function featureStyle(feature: any, colourKey: string, theme: string) {
 }
 
 function featureStyleOG(feature: any) {
+    console.log("instyleOG")
     return {
         fillColor: (colour_scale(feature.properties['gcbr-index'])).hex(),
         fillOpacity: 1,
@@ -39,4 +41,4 @@ function resetHighlight(layer: L.Layer, geojson: L.GeoJSON) {
 }
 
 
-export { featureStyleOG, highlightFeature, resetHighlight, colour_scale }
+export { featureStyle, featureStyleOG, highlightFeature, resetHighlight, colour_scale }
