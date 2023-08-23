@@ -1,18 +1,27 @@
-import { createContext } from "react";
+'use client'
+
+import { useState, createContext } from "react";
 import { Indicator, indicators } from "@/lib/indicators";
 
-interface MapData {
-  indicator: Indicator,
-  setIndicator: any,
-  focusedFeature: any,
-  setFocusedFeature: any
-}
+export const IndicatorContext = createContext<Indicator>(indicators[0]);
+export const SetIndicatorContext = createContext<any>(() => {});
+export const FocusedFeatureContext = createContext<any>(null);
+export const SetFocusedFeatureContext = createContext<any>(() => {});
 
-const defaultMapData: MapData = {
-  indicator: indicators[0],
-  setIndicator: () => {},
-  focusedFeature: null,
-  setFocusedFeature: () => {}
-}
+export default function MapProvider({children}: {children: any}) {
 
-export const MapContext = createContext(defaultMapData);
+  const [indicator, setIndicator] = useState(indicators[0])
+  const [focusedFeature, setFocusedFeature] = useState(null)
+
+  return (
+    <IndicatorContext.Provider value={indicator}>
+      <SetIndicatorContext.Provider value={setIndicator}>
+      <FocusedFeatureContext.Provider value={focusedFeature}>
+        <SetFocusedFeatureContext.Provider value={setFocusedFeature}>
+        {children}
+        </SetFocusedFeatureContext.Provider>
+      </FocusedFeatureContext.Provider>
+      </SetIndicatorContext.Provider>
+    </IndicatorContext.Provider>
+  )
+}

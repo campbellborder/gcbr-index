@@ -1,13 +1,12 @@
-import { Indicator } from '@/lib/indicators';
-import { GeoJSON, useMap, Tooltip } from 'react-leaflet'
+import { GeoJSON, Tooltip } from 'react-leaflet'
 import { useTheme } from "next-themes"
 import useSWR from 'swr'
 import * as geojson from 'geojson'
-import { featureStyle, featureStyleOG, highlightFeature, resetHighlight } from '@/lib/map-utils';
+import { featureStyle, highlightFeature, resetHighlight } from '@/lib/map-utils';
 import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useContext, useRef, useEffect } from 'react';
-import { MapContext } from './map-context';
+import { useContext, useRef } from 'react';
+import { SetFocusedFeatureContext, IndicatorContext } from './map-context';
 
 // Fetch function for SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -39,11 +38,12 @@ function Loading() {
 export default function MapData() {
 
   // Hooks
-  const { indicator, focusedFeature, setFocusedFeature } = useContext(MapContext)
+  const indicator = useContext(IndicatorContext)
+  const setFocusedFeature = useContext(SetFocusedFeatureContext)
   const geojson = useRef<L.GeoJSON>(null)
   const { resolvedTheme } = useTheme()
-  const { data, error, isLoading } = useSWR(() => `/api/geo/${indicator.value}`, fetcher)
-
+  const { data, error, isLoading } = useSWR(() => `/api/geo/all`, fetcher)
+  
   // Feature event callbacks
   function onEachFeature(_: geojson.Feature<geojson.Geometry, any>, layer: L.Layer) {
     console.log("on each feature")
@@ -61,6 +61,8 @@ export default function MapData() {
     })
   }
 
+  console.log(indicator.value)
+
   if (error) return <Error/>
   if (isLoading) return <Loading/>
   return (
@@ -68,15 +70,14 @@ export default function MapData() {
       ref={geojson}
       key={indicator.value + resolvedTheme}
       data={data}
-      style={(feature) => featureStyle(feature, indicator.value, resolvedTheme!)}
-      // style={featureStyleOG}
+      style={(feature) => featureStyle(feature, indicator, resolvedTheme!)}
       onEachFeature={onEachFeature}
     >
-      <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground'>
+      {/* <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground'>
         <div>
           {focusedFeature && focusedFeature.properties['name-en']}
         </div>
-      </Tooltip>
+      </Tooltip> */}
     </GeoJSON>
   )
 }

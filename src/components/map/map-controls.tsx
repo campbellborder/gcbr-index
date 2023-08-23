@@ -1,7 +1,7 @@
-import { colour_scale } from '@/lib/map-utils';
+import { burden_colour_scale, mitigation_colour_scale } from '@/lib/map-utils';
 import { useContext, ReactElement } from 'react'
-import { MapContext } from '@/components/map/map-context';
 import { IndicatorSelector } from '@/components/map/indicator-selector';
+import { FocusedFeatureContext, IndicatorContext, SetIndicatorContext } from './map-context';
 
 const POSITION_CLASSES: { [position: string]: string } = {
   bottomleft: 'leaflet-bottom leaflet-left',
@@ -12,17 +12,23 @@ const POSITION_CLASSES: { [position: string]: string } = {
 
 function LegendControl({ position }: { position: string }) {
 
+  const indicator = useContext(IndicatorContext)
+  const mitigating_value = indicator.value.includes("mitigating")
+  const mitigating_category = indicator.category.includes("mitigating")
+  const scale = (mitigating_value || mitigating_category ? mitigation_colour_scale : burden_colour_scale)
+
   return (
     <Control position={position}>
       <>
       <div className="p-2">
         {[...Array(6).keys()].map((i) => {
           var number = 100 - i * 20
-          var colour = colour_scale(number).hex()
+          var colour = scale(number).hex()
           return (
             <div key={i} className='h-4'>
             <i className={"w-4 h-full float-left mr-2 z-[5000]"} style={{background: colour}}></i>
             {number}
+            {mitigating_value && "%"}
             <br/>
             </div>)
         })}
@@ -34,7 +40,8 @@ function LegendControl({ position }: { position: string }) {
 
 function InfoControl({ position }: { position: string }) {
 
-  const { indicator, focusedFeature } = useContext(MapContext)
+  const indicator = useContext(IndicatorContext)
+  const focusedFeature = useContext(FocusedFeatureContext)
 
   function displayValue(s: string) {
     var num = Number(s)
@@ -58,7 +65,8 @@ function InfoControl({ position }: { position: string }) {
 
 function DataControl({ position }: { position: string }) {
 
-  const { indicator, setIndicator } = useContext(MapContext)
+  const indicator = useContext(IndicatorContext)
+  const setIndicator = useContext(SetIndicatorContext)
 
   return (
     <Control position={position}>

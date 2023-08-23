@@ -1,17 +1,14 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css';
-import {useState, useEffect } from 'react'
+import {useEffect } from 'react'
 import * as L from 'leaflet'
 import { MapContainer, useMap } from 'react-leaflet'
-import { indicators } from '@/lib/indicators';
 import MapData from './map-data';
 import MapControls from './map-controls';
-import { MapContext } from '@/components/map/map-context';
 
 // Handle automatic setting of bounds and minimum zoom
 function MapBounds({bounds}: {bounds: L.LatLngBounds}) {
-
   var map = useMap()
   useEffect(() => {
     map.fitBounds(bounds)
@@ -22,11 +19,6 @@ function MapBounds({bounds}: {bounds: L.LatLngBounds}) {
 }
 
 export default function Map() {
-
-  // Map state
-  const [indicator, setIndicator] = useState(indicators[0])
-  const [focusedFeature, setFocusedFeature] = useState<any>(null)
-  const map_data = { indicator: indicator, setIndicator: setIndicator, focusedFeature: focusedFeature, setFocusedFeature: setFocusedFeature }
 
   // Map constants
   const center: [number, number] = [30, 0]
@@ -41,7 +33,6 @@ export default function Map() {
   //TODO Fix map height and make it responsive (width is done)
   return (
     <div className='w-[90%] lg:w-4/6 h-[550px] m-auto'>
-    <MapContext.Provider value={map_data}>
     <MapContainer
       center={center}
       className='!h-full !bg-transparent'
@@ -60,7 +51,6 @@ export default function Map() {
       <MapData/>
     
     </MapContainer>
-    </MapContext.Provider>
     </div>
   )
 }
