@@ -84,7 +84,6 @@ export default function MapData() {
       data={data}
       style={(feature) => featureStyle(feature, indicator, resolvedTheme!)}
       onEachFeature={onEachFeature}
-      className="!outline-0"
     >
       <CustomTooltip />
     </GeoJSON>

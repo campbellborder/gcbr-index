@@ -17,7 +17,8 @@ function featureStyle(feature: any, indicator: Indicator, theme: string) {
         fillOpacity: 1,
         weight: 1,
         color: theme == "light" ? 'white' : '#020817',
-        opacity: 1
+        opacity: 1,
+        className: 'outline-0',
     };
 }
 
