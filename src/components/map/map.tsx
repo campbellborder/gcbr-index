@@ -26,6 +26,7 @@ export default function Map() {
   const maxZoom = 5
   const zoomSnap = 0.1
   const zoomDelta = 1
+  const crs = L.CRS.EPSG3857
 
   // Renderer (for setting custom padding)
   const renderer: L.Renderer = L.svg({padding: 1})
@@ -44,6 +45,7 @@ export default function Map() {
       wheelPxPerZoomLevel={10}
       renderer={renderer}
       attributionControl={false}
+      crs={crs}
       >
 
       <MapBounds bounds={bounds}/>

@@ -6,7 +6,7 @@ import { featureStyle, highlightFeature, resetHighlight } from '@/lib/map-utils'
 import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useContext, useRef } from 'react';
-import { SetFocusedFeatureContext, IndicatorContext } from './map-context';
+import { SetFocusedFeatureContext, IndicatorContext, FocusedFeatureContext } from './map-context';
 
 // Fetch function for SWR
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -35,6 +35,19 @@ function Loading() {
   )
 }
 
+function CustomTooltip() {
+
+  const focusedFeature = useContext(FocusedFeatureContext)
+
+  return (
+    <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground'>
+        <div>
+          {focusedFeature && focusedFeature.properties['name-en']}
+        </div>
+      </Tooltip>
+  )
+}
+
 export default function MapData() {
 
   // Hooks
@@ -46,7 +59,6 @@ export default function MapData() {
   
   // Feature event callbacks
   function onEachFeature(_: geojson.Feature<geojson.Geometry, any>, layer: L.Layer) {
-    console.log("on each feature")
     layer.on({
       mouseover: (e: L.LeafletMouseEvent) => {
         const feature = highlightFeature(e.target);
@@ -73,11 +85,7 @@ export default function MapData() {
       style={(feature) => featureStyle(feature, indicator, resolvedTheme!)}
       onEachFeature={onEachFeature}
     >
-      {/* <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground'>
-        <div>
-          {focusedFeature && focusedFeature.properties['name-en']}
-        </div>
-      </Tooltip> */}
+      <CustomTooltip />
     </GeoJSON>
   )
 }

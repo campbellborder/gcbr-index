@@ -2,8 +2,8 @@ import * as L from 'leaflet'
 import chroma from 'chroma-js'
 import { Indicator } from './indicators'
 
-const burden_colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'red']).domain([0,100]).padding([0.1, 0])
-const mitigation_colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'green']).domain([0,100]).padding([0.1, 0])
+const burden_colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'red']).domain([0,100]).padding([0.2, 0])
+const mitigation_colour_scale: (d: any) => chroma.Color = chroma.scale(['white', 'green']).domain([0,100]).padding([0.2, 0])
 
 function featureStyle(feature: any, indicator: Indicator, theme: string) {
 
@@ -14,7 +14,7 @@ function featureStyle(feature: any, indicator: Indicator, theme: string) {
 
     return {
         fillColor: (scale(feature.properties[indicator.value] * scalar)).hex(),
-        fillOpacity: 0.8,
+        fillOpacity: 1,
         weight: 1,
         color: theme == "light" ? 'white' : '#020817',
         opacity: 1
@@ -25,7 +25,7 @@ function featureStyle(feature: any, indicator: Indicator, theme: string) {
 function highlightFeature(layer: any) {
     layer.setStyle({
         weight: 2,
-        fillOpacity: 0.6
+        fillOpacity: 0.7
     });
 
     return layer.feature;
