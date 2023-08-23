@@ -8,7 +8,7 @@ export const SetIndicatorContext = createContext<any>(() => {});
 export const FocusedFeatureContext = createContext<any>(null);
 export const SetFocusedFeatureContext = createContext<any>(() => {});
 
-export default function MapProvider({children}: {children: any}) {
+export default function MapContextProvider({children}: {children: any}) {
 
   const [indicator, setIndicator] = useState(indicators[0])
   const [focusedFeature, setFocusedFeature] = useState(null)
