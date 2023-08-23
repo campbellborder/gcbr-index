@@ -40,13 +40,15 @@ function CustomTooltip() {
   const focusedFeature = useContext(FocusedFeatureContext)
 
   return (
-    <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground'>
+    <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground before:!hidden'>
         <div>
           {focusedFeature && focusedFeature.properties['name-en']}
         </div>
       </Tooltip>
   )
 }
+
+
 
 export default function MapData() {
 
@@ -73,8 +75,6 @@ export default function MapData() {
     })
   }
 
-  console.log(indicator.value)
-
   if (error) return <Error/>
   if (isLoading) return <Loading/>
   return (
@@ -84,6 +84,7 @@ export default function MapData() {
       data={data}
       style={(feature) => featureStyle(feature, indicator, resolvedTheme!)}
       onEachFeature={onEachFeature}
+      className="!outline-0"
     >
       <CustomTooltip />
     </GeoJSON>
