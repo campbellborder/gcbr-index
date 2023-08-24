@@ -40,7 +40,7 @@ function CustomTooltip() {
   return (
     <Tooltip sticky className='dark:!bg-slate-700 dark:!border-0 dark:!text-foreground before:!hidden'>
         <div>
-          {focusedFeature && focusedFeature.properties['name-en']}
+          {focusedFeature && focusedFeature.properties['name']}
         </div>
       </Tooltip>
   )
