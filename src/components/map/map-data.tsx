@@ -7,9 +7,7 @@ import { Loader2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useContext, useRef } from 'react';
 import { SetFocusedFeatureContext, IndicatorContext, FocusedFeatureContext } from './map-context';
-
-// Fetch function for SWR
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+import { fetcher } from '@/lib/utils';
 
 // Display error message
 function Error() {
@@ -47,8 +45,6 @@ function CustomTooltip() {
       </Tooltip>
   )
 }
-
-
 
 export default function MapData() {
 
