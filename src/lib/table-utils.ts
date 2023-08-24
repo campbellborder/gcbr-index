@@ -1,4 +1,5 @@
-import { indicators } from "./indicators";
+import { Data } from "@/components/table/columns";
+import { Indicator, indicators } from "./indicators";
 
 export const blankVisibilityState: Record<string, boolean> = Object.fromEntries([['iso-a3', false], ...indicators.map((indicator) => [indicator.value, false])])
 

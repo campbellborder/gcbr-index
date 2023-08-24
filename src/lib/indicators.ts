@@ -2,6 +2,7 @@ export type Indicator = {
     value: string,
     label: string,
     category: string
+    longLabel?: string
 }
 
 export const indicators: Indicator[] = [
@@ -17,7 +18,8 @@ export const indicators: Indicator[] = [
   },
   {
     value: "lab-leak-risk-burden",
-    label: "Lab leak risk burden",
+    label: "Risk burden",
+    longLabel: "Lab leak risk burden",
     category: "lab-leak"
   },
   {
@@ -42,7 +44,8 @@ export const indicators: Indicator[] = [
   },
   {
     value: "lab-leak-mitigating-countermeasures",
-    label: "Lab leak mitigating countermeasures",
+    label: "Mitigating countermeasures",
+    longLabel: "Lab leak mitigating countermeasures",
     category: "lab-leak"
   },
   {
@@ -92,7 +95,8 @@ export const indicators: Indicator[] = [
   },
   {
     value: "zoonotic-risk-burden",
-    label: "Zoonotic risk burden",
+    label: "Risk burden",
+    longLabel: "Zoonotic risk burden",
     category: "zoonotic"
   },
   {
@@ -107,7 +111,8 @@ export const indicators: Indicator[] = [
   },
   {
     value: "zoonotic-mitigating-countermeasures",
-    label: "Zoonotic mitigating countermeasures",
+    label: "Mitigating countermeasures",
+    longLabel: "Zoonotic mitigating countermeasures",
     category: "zoonotic"
   },
   {

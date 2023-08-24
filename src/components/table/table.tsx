@@ -2,7 +2,7 @@
 
 import useSWR from 'swr'
 import { fetcher } from "@/lib/utils"
-import { columns } from "./columns"
+import { columns, Data } from "./columns"
 import { useContext, useEffect, useState } from 'react'
 
 import {
@@ -103,14 +103,20 @@ export function DataTable<TData, TValue>({
 
 export default function MyTable() {
 
+  const indicator = useContext(IndicatorContext)
   const { data, error, isLoading } = useSWR("/api/all", fetcher)
 
   if (error) return <p>error</p>
   if (isLoading) return <p>isLoading</p>
-  return (
 
+  const sortedData = data.sort((a: Data, b: Data) => Number(b[indicator.value]) - Number(a[indicator.value]))
+  const rankedData = sortedData.map((row: Data, index: number) => (
+    {...row, rank: index + 1}
+  ))
+
+  return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={rankedData} />
     </div>
   )
 }
