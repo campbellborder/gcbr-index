@@ -23,11 +23,15 @@ export async function GET(
         Object.keys(data).forEach((key) => validKeys.includes(key) || delete data[key]);
         var feature = geoJsonData.features.find((feature1: any) => feature1.properties['iso-a3'] == data['iso-a3'])
         if (feature) {
-            Object.keys(data).forEach((key) => feature.properties[key] = data[key])
+            Object.keys(data).forEach((key) => {
+                if (["iso-a3", "name"].indexOf(key) == -1) {
+                    feature.properties[key] = parseFloat(data[key])
+                } else {
+                    feature.properties[key] = data[key]
+                }
+            })
         }
     })
-    
-    // TODO: Handle geojson objects that arent present in dummy data/data
-    
+        
     return NextResponse.json(geoJsonData);
 }

@@ -84,7 +84,7 @@ export function IndicatorSelector({ indicator, setIndicator }: { indicator: Indi
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {indicator.label}
+          {indicator.longLabel ? indicator.longLabel : indicator.label}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

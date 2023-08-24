@@ -14,7 +14,6 @@ export async function GET(
     const geoJsonString = await fs.readFile(jsonDirectory + '/countries-10.geojson', 'utf8');
     var geoJsonData = JSON.parse(geoJsonString)
 
-
     const keys = Object.keys(jsonData[0])
     if (type == "all") {
         var validKeys = keys
@@ -24,7 +23,15 @@ export async function GET(
         var validKeys = ["iso-a3", type]
     }
     jsonData.forEach((data: any) => {
-        Object.keys(data).forEach((key) => validKeys.includes(key) || delete data[key]);
+        Object.keys(data).forEach((key) => {
+            if (validKeys.includes(key)) {
+                if (["iso-a3"].indexOf(key) == -1) {
+                    data[key] = parseFloat(data[key])
+                }
+            } else {
+              delete data[key]
+            } 
+        });
         var geoObject = geoJsonData.features.find((object: any) => object.properties['iso-a3'] == data["iso-a3"])
         if (geoObject) {
             data['name'] = geoObject.properties['name'] 
@@ -32,8 +39,6 @@ export async function GET(
             console.log(`WARNING: missing geojson country with code ${data['iso-a3']}`)
         }
     })
-
-    console.log(geoJsonData.features.length)
     
     return NextResponse.json(jsonData);
 }
