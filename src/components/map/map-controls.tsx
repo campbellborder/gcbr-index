@@ -54,7 +54,7 @@ function InfoControl({ position }: { position: string }) {
   return (
     <Control position={position}>
       <div className='p-2 w-[200px]'>
-      <h1 className='text-center font-bold'>{focusedFeature ? focusedFeature.properties['name-en'] : "Hover over a country"}</h1>
+      <h1 className='text-center font-bold'>{focusedFeature ? focusedFeature.properties['name'] : "Hover over a country"}</h1>
       {focusedFeature &&
       <h2 className='text-center'>{displayValue(focusedFeature.properties[indicator.value])}</h2>
       }
