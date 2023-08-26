@@ -27,9 +27,9 @@ function MobileNavMenu({ children }: { children: ReactElement }) {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="outline" size="icon">
+        {/* <Button variant="outline" size="icon"> */}
           <Menu className='scale-[0.9]'/>
-        </Button>
+        {/* </Button> */}
         </SheetTrigger>
       <SheetContent side="left">
         {children}
