@@ -57,7 +57,7 @@ export default function MapData() {
   const { data, error, isLoading } = useSWR(() => `/api/geo/all`, fetcher)
 
   if (map) {
-    map.getPane("overlayPane")!.style.zIndex = "20"
+    // map.getPane("overlayPane")!.style.zIndex = "20"
   }
   
   // Feature event callbacks
