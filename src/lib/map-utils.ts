@@ -19,6 +19,7 @@ function featureStyle(feature: any, indicator: Indicator, theme: string) {
         color: theme == "light" ? 'white' : '#020817',
         opacity: 1,
         className: 'outline-0',
+
     };
 }
 

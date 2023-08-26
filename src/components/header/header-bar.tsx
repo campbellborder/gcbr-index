@@ -31,7 +31,7 @@ function MobileNavMenu({ children }: { children: ReactElement }) {
           <Menu className='scale-[0.9]'/>
         </Button>
         </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent side="left" className='z-[1400]'>
         {children}
       </SheetContent>
     </Sheet>
@@ -41,7 +41,7 @@ function MobileNavMenu({ children }: { children: ReactElement }) {
 export default function HeaderBar() {
 
   return (
-    <header className="fixed border-b bg-inherit w-full top-0">
+    <header className="fixed border-b bg-inherit w-full top-0 z-[1200]">
       <div className="container flex h-14">
         <MobileNavMenu>
           <NavigationMenu>

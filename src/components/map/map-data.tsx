@@ -1,4 +1,4 @@
-import { GeoJSON, Tooltip } from 'react-leaflet'
+import { GeoJSON, Tooltip, useMap } from 'react-leaflet'
 import { useTheme } from "next-themes"
 import useSWR from 'swr'
 import * as geojson from 'geojson'
@@ -49,11 +49,16 @@ function CustomTooltip() {
 export default function MapData() {
 
   // Hooks
+  const map = useMap()
   const indicator = useContext(IndicatorContext)
   const setFocusedFeature = useContext(SetFocusedFeatureContext)
   const geojson = useRef<L.GeoJSON>(null)
   const { resolvedTheme } = useTheme()
   const { data, error, isLoading } = useSWR(() => `/api/geo/all`, fetcher)
+
+  if (map) {
+    map.getPane("overlayPane")!.style.zIndex = "20"
+  }
   
   // Feature event callbacks
   function onEachFeature(_: geojson.Feature<geojson.Geometry, any>, layer: L.Layer) {

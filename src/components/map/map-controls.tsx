@@ -2,6 +2,7 @@ import { burden_colour_scale, mitigation_colour_scale } from '@/lib/map-utils';
 import { useContext, ReactElement } from 'react'
 import { IndicatorSelector } from '@/components/map/indicator-selector';
 import { FocusedFeatureContext, IndicatorContext, SetIndicatorContext } from './map-context';
+import { displayValue } from '@/lib/utils';
 
 const POSITION_CLASSES: { [position: string]: string } = {
   bottomleft: 'leaflet-bottom leaflet-left',
@@ -26,7 +27,7 @@ function LegendControl({ position }: { position: string }) {
           var colour = scale(number).hex()
           return (
             <div key={i} className='h-4'>
-            <i className={"w-4 h-full float-left mr-2 z-[5000]"} style={{background: colour}}></i>
+            <i className={"w-4 h-full float-left mr-2"} style={{background: colour}}></i>
             {number}
             {mitigating_value && "%"}
             <br/>
@@ -43,20 +44,14 @@ function InfoControl({ position }: { position: string }) {
   const indicator = useContext(IndicatorContext)
   const focusedFeature = useContext(FocusedFeatureContext)
 
-  function displayValue(s: string) {
-    var num = Number(s)
-    if (Number.isInteger(num)) {
-      return num.toFixed(0)
-    }
-    return num.toFixed(2)
-  }
+
 
   return (
     <Control position={position}>
       <div className='p-2 w-[200px]'>
       <h1 className='text-center font-bold'>{focusedFeature ? focusedFeature.properties['name'] : "Hover over a country"}</h1>
       {focusedFeature &&
-      <h2 className='text-center'>{displayValue(focusedFeature.properties[indicator.value])}</h2>
+      <h2 className='text-center'>{displayValue(focusedFeature.properties[indicator.value], 2)}</h2>
       }
       </div>
     </Control>

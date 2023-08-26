@@ -88,7 +88,7 @@ export function IndicatorSelector({ indicator, setIndicator }: { indicator: Indi
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] h-[500px] p-0 z-[5000]">
+      <PopoverContent className="w-[250px] h-[500px] p-0 z-[1000]">
         <Command>
           <CommandInput placeholder="Search indicators..." />
           <ScrollArea>

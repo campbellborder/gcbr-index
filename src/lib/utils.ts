@@ -7,3 +7,12 @@ export function cn(...inputs: ClassValue[]) {
 
 // Fetch function for SWR
 export const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
+// 
+export function displayValue(s: string, decimals: number) {
+  var num = Number(s)
+  if (Number.isInteger(num)) {
+    return num.toFixed(0)
+  }
+  return num.toFixed(decimals)
+}
